@@ -1,0 +1,9 @@
+CREATE OR REPLACE PIPE <pipe name> 
+AUTO_INGEST=TRUE 
+INTEGRATION= <integration name>
+AS
+    <pipe code here>
+  ;
+  
+  
+  ALTER PIPE <pipe name> REFRESH;
