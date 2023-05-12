@@ -1,0 +1,67 @@
+/***********************************************************************************************************
+Create a proc that moves data from the most recent loaded file to the silver layer.
+************************************************************************************************************/
+CREATE OR REPLACE PROCEDURE SILVER.<schemaname>.<pipename>()
+RETURNS VARCHAR(16777216)
+LANGUAGE SQL
+EXECUTE AS CALLER
+AS BEGIN  
+    MERGE INTO Silver.<schemaname>.<tablename> AS TARGET 
+    USING (
+            SELECT 
+             Column1 AS columnname 
+            ,Column2 AS columnname 
+            ,COLUMN3 AS columnname
+            ,COLUMN4 AS columnname
+            ,COLUMN5 AS columnname
+            ,COLUMN6 AS columnname
+            ,COLUMN7 AS columnname
+    FROM Bronze.<schemaname>.<tablename> t 
+    qualify id = last_value(id) over(partition by columnname order by columnname)
+) AS SOURCE 
+    ON TARGET.columnname = SOURCE.columnname 
+                    
+        WHEN MATCHED AND (TARGET.columnname != SOURCE.columnname
+                     OR TARGET.columnname != SOURCE.columnname
+                     OR TARGET.columnname != SOURCE.columnname
+                     OR TARGET.columnname != SOURCE.columnname
+                     OR TARGET.columnname != SOURCE.columnname
+                     OR TARGET.columnname != SOURCE.columnname
+                     OR TARGET.columnname != SOURCE.columnname
+                     OR TARGET.columnname != SOURCE.columnname
+                     
+                )
+        THEN UPDATE 
+        SET 
+                      TARGET.columnname = SOURCE.columnname
+                     ,TARGET.columnname = SOURCE.columnname
+                     ,TARGET.columnname = SOURCE.columnname
+                     ,TARGET.columnname = SOURCE.columnname
+                     ,TARGET.columnname = SOURCE.columnname
+                     ,TARGET.columnname = SOURCE.columnname
+                     ,TARGET.columnname = SOURCE.columnname
+           
+        WHEN NOT MATCHED THEN 
+        INSERT ( 
+             columnname  
+            ,columnname 
+            ,columnname  
+            ,columnname  
+            ,columnname 
+            ,columnname 
+            ,columnname
+        )
+        VALUES(
+            SOURCE.columnname  
+            ,SOURCE.columnname 
+            ,SOURCE.columnname  
+            ,SOURCE.columnname  
+            ,SOURCE.columnname 
+            ,SOURCE.columnname 
+            ,SOURCE.columnname 
+
+        );
+    
+RETURN 'Completed';
+
+END;
