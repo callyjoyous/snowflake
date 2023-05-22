@@ -1,5 +1,5 @@
 /***********************************************************************************************************
-Create a proc that moves data from the most recent loaded file to the silver layer.
+Create a proc that moves data incrementally from the most recent loaded file to the silver layer.
 ************************************************************************************************************/
 CREATE OR REPLACE PROCEDURE SILVER.<schemaname>.<pipename>()
 RETURNS VARCHAR(16777216)
@@ -17,7 +17,7 @@ AS BEGIN
             ,COLUMN6 AS columnname
             ,COLUMN7 AS columnname
     FROM Bronze.<schemaname>.<tablename> t 
-    qualify id = last_value(id) over(partition by columnname order by columnname)
+   QUALIFY ROW_NUMBER() OVER(PARTITION BY columnname ORDER BY columnname DESC) = 1
 ) AS SOURCE 
     ON TARGET.columnname = SOURCE.columnname 
                     
